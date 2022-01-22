@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using ADODotNetBasic.Models;
+using System;
 
 namespace ADODotNetBasic
 {
@@ -11,34 +9,95 @@ namespace ADODotNetBasic
         {
             try
             {
-                var sqlConnection = new SqlConnection("Data Source=(localdb)\\mssqllocaldb; Initial Catalog=Learning_db");
+                Console.WriteLine("Choose Operation");
+                Console.WriteLine("1. Get all Employee");
+                Console.WriteLine("2. Get Employee by id");
+                Console.WriteLine("3. Update Employee");
+                Console.WriteLine("4. Delete Employee by id");
+                Console.WriteLine("5. Insert Employee");
 
-                sqlConnection.Open();
+                var userSelection = Convert.ToInt32(Console.ReadLine());
+                var employeeService = new EmployeeService();
 
-                var sqlCommand = new SqlCommand("select top 10 * from Employee", sqlConnection);
-
-                var dataTable = new DataTable();
-                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-
-                sqlDataAdapter.Fill(dataTable);
-
-                var employees = dataTable.AsEnumerable().Select(dataRow => {
-                    return new Employee
-                    {
-                        Id = dataRow.Field<int>("Id"),
-                        Name = dataRow.Field<string>("Name"),
-                        Age = dataRow.Field<int>("Age")
-                    };
-                }).ToList();
-                sqlConnection.Close();
-
-                foreach (var employee in employees)
+                switch (userSelection)
                 {
-                    Console.WriteLine(employee.Id);
-                    Console.WriteLine(employee.Name);
-                    Console.WriteLine(employee.Age);
+                    case (int)EmployeeOperation.GET_ALL_EMPLOYEES:
+                        var employees = employeeService.GetEmployees();
 
-                    Console.WriteLine("----------------------");
+                        Console.WriteLine("------Showing all the employees details---------");
+                        foreach (var employeeItem in employees)
+                        {
+                            Console.WriteLine("Id : " + employeeItem.Id);
+                            Console.WriteLine("Name : " + employeeItem.Name);
+                            Console.WriteLine("Age : " + employeeItem.Age);
+                            Console.WriteLine("---------------");
+                            Console.WriteLine();
+                        }
+
+                        break;
+
+                    case (int)EmployeeOperation.GET_EMPLOYEE_BY_ID:
+                        Console.WriteLine("Enter Employee id");
+                        var employeeId = Convert.ToInt32(Console.ReadLine());
+
+                        var employee = employeeService.GetEmployeeById(employeeId);
+                        Console.WriteLine("Id : " + employee.Id);
+                        Console.WriteLine("Name : " + employee.Name);
+                        Console.WriteLine("Age : " + employee.Age);
+                        Console.WriteLine("---------------");
+
+                        break;
+
+                    case (int)EmployeeOperation.UPDATE_EMPLOYEE:
+                        Console.WriteLine("Enter Employee id");
+                        var id = Convert.ToInt32(Console.ReadLine());
+
+                        Console.WriteLine("Enter Employee name");
+                        var name = Console.ReadLine();
+
+                        Console.WriteLine("Enter Employee age");
+                        var age = Convert.ToInt32(Console.ReadLine());
+
+                        var updateEmployee = new Employee
+                        {
+                            Id = id,
+                            Name = name,
+                            Age = age
+                        };
+                        employeeService.UpdateEmployee(updateEmployee);
+                        Console.WriteLine("Update Operation done successfully");
+
+                        break;
+
+                    case (int)EmployeeOperation.DELETE_EMPLOYEE:
+                        Console.WriteLine("Enter Employee id to Delete");
+                        var employeeIdToDelete = Convert.ToInt32(Console.ReadLine());
+
+                        employeeService.DeleteEmployeeById(employeeIdToDelete);
+                        Console.WriteLine("Delete Operation done successfully");
+
+                        break;
+
+                    case (int)EmployeeOperation.INSERT_EMPLOYEE:
+
+                        Console.WriteLine("Enter Employee name");
+                        var employeeName = Console.ReadLine();
+
+                        Console.WriteLine("Enter Employee age");
+                        var employeeAge = Convert.ToInt32(Console.ReadLine());
+
+                        var employeeToInsert = new Employee
+                        {
+                            Name = employeeName,
+                            Age = employeeAge
+                        };
+                        employeeService.InsertEmployee(employeeToInsert);
+                        Console.WriteLine("Insert Operation done successfully");
+
+                        break;
+
+                    default:
+                        break;
                 }
             }
             catch (Exception ex)
@@ -48,10 +107,5 @@ namespace ADODotNetBasic
 
         }
     }
-    public class Employee
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
+
 }
