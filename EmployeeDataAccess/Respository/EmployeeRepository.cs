@@ -1,17 +1,17 @@
-﻿using ADODotNetBasic.Models;
+﻿using EmployeeDataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace ADODotNetBasic
+namespace EmployeeDataAccess.Services
 {
-    public class EmployeeService
+    public class EmployeeRepository
     {
         private SqlConnection _sqlConnection;
 
-        public EmployeeService()
+        public EmployeeRepository()
         {
             _sqlConnection = new SqlConnection("Data Source=(localdb)\\mssqllocaldb; Initial Catalog=Learning_db");
         }
@@ -28,7 +28,8 @@ namespace ADODotNetBasic
 
                 sqlDataAdapter.Fill(dataTable);
 
-                var employees = dataTable.AsEnumerable().Select(dataRow => {
+                var employees = dataTable.AsEnumerable().Select(dataRow =>
+                {
                     return new Employee
                     {
                         Id = dataRow.Field<int>("Id"),
@@ -43,7 +44,8 @@ namespace ADODotNetBasic
             {
                 throw;
             }
-            finally{
+            finally
+            {
                 _sqlConnection.Close();
             }
         }
@@ -53,14 +55,15 @@ namespace ADODotNetBasic
             try
             {
                 _sqlConnection.Open();
-                var sqlCommand = new SqlCommand("select * from Employee where id = "+ id , _sqlConnection);
+                var sqlCommand = new SqlCommand("select * from Employee where id = " + id, _sqlConnection);
 
                 var dataTable = new DataTable();
                 var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
                 sqlDataAdapter.Fill(dataTable);
 
-                var employees = dataTable.AsEnumerable().Select(dataRow => {
+                var employees = dataTable.AsEnumerable().Select(dataRow =>
+                {
                     return new Employee
                     {
                         Id = dataRow.Field<int>("Id"),

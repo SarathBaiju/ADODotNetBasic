@@ -1,4 +1,5 @@
-﻿using ADODotNetBasic.Models;
+﻿using EmployeeDataAccess.Models;
+using EmployeeDataAccess.Services;
 using System;
 
 namespace ADODotNetBasic
@@ -17,12 +18,12 @@ namespace ADODotNetBasic
                 Console.WriteLine("5. Insert Employee");
 
                 var userSelection = Convert.ToInt32(Console.ReadLine());
-                var employeeService = new EmployeeService();
+                var employeeRepository = new EmployeeRepository();
 
                 switch (userSelection)
                 {
                     case (int)EmployeeOperation.GET_ALL_EMPLOYEES:
-                        var employees = employeeService.GetEmployees();
+                        var employees = employeeRepository.GetEmployees();
 
                         Console.WriteLine("------Showing all the employees details---------");
                         foreach (var employeeItem in employees)
@@ -40,7 +41,7 @@ namespace ADODotNetBasic
                         Console.WriteLine("Enter Employee id");
                         var employeeId = Convert.ToInt32(Console.ReadLine());
 
-                        var employee = employeeService.GetEmployeeById(employeeId);
+                        var employee = employeeRepository.GetEmployeeById(employeeId);
                         Console.WriteLine("Id : " + employee.Id);
                         Console.WriteLine("Name : " + employee.Name);
                         Console.WriteLine("Age : " + employee.Age);
@@ -64,7 +65,7 @@ namespace ADODotNetBasic
                             Name = name,
                             Age = age
                         };
-                        employeeService.UpdateEmployee(updateEmployee);
+                        employeeRepository.UpdateEmployee(updateEmployee);
                         Console.WriteLine("Update Operation done successfully");
 
                         break;
@@ -73,7 +74,7 @@ namespace ADODotNetBasic
                         Console.WriteLine("Enter Employee id to Delete");
                         var employeeIdToDelete = Convert.ToInt32(Console.ReadLine());
 
-                        employeeService.DeleteEmployeeById(employeeIdToDelete);
+                        employeeRepository.DeleteEmployeeById(employeeIdToDelete);
                         Console.WriteLine("Delete Operation done successfully");
 
                         break;
@@ -91,7 +92,7 @@ namespace ADODotNetBasic
                             Name = employeeName,
                             Age = employeeAge
                         };
-                        employeeService.InsertEmployee(employeeToInsert);
+                        employeeRepository.InsertEmployee(employeeToInsert);
                         Console.WriteLine("Insert Operation done successfully");
 
                         break;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ADODotNetBasic.Models
+namespace EmployeeDataAccess.Models
 {
     public class Employee
     {
