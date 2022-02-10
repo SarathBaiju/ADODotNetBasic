@@ -17,6 +17,8 @@ namespace ADODotNetBasic
 
                 var sqlCommand = new SqlCommand("select top 10 * from Employee", sqlConnection);
 
+
+                //To see data: DefaultView => ExpandResult
                 var dataTable = new DataTable();
                 var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
